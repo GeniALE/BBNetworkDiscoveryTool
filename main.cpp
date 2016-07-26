@@ -28,12 +28,9 @@ using namespace std;
 // --------------------------------------------------------------------------------------------------------------
 // Private constants.
 
-// CAC UDP port.
-#define kUDPPortDST    34924
-// BeagleBrew UDP port.
-#define kUDPPortBB    34923
 // Location ID offset
 #define kLocationIDOffset 17
+
 // Subnet.
 #define kSubnet "192.168.2."
 
@@ -42,8 +39,9 @@ typedef enum
     kLocationID_Unknown,
     kLocationID_CAC = 0xB0,
     kLocationID_BB,
-    kLocationID_Max
 } UDPLocationID_t;
+
+#define kLocationID_Max 3
 
 #define kLocationIDTable \
 { \
@@ -164,13 +162,14 @@ int main(int argc, char** argv)
                 exit(-1);
             }
 
-            uint8_t* udpBuffer = (uint8_t*)calloc(1, kUDPBufferSize);
-            int serverPort;
-            char networkAddress[kServerAddressSize] = { 0 };
             int status = kSuccess;
             int discoveryMaxIterations = atoi(argv[2]);
             for (int discoveryIterations = 0; discoveryIterations < discoveryMaxIterations; discoveryIterations ++)
             {
+                uint8_t* udpBuffer = (uint8_t*)calloc(1, kUDPBufferSize);
+                int serverPort;
+                char networkAddress[kServerAddressSize] = { 0 };
+
                 if ((status = UDPGetServerInfo(socketFileDescriptor, &serverPort, networkAddress, udpBuffer)) < 0)
                 {
                     PrintMessage(__FILENAME__, __FUNCTION__, "Error", "Failed to read UDP packet (%s)", strerror(errno));
@@ -184,9 +183,9 @@ int main(int argc, char** argv)
                         printf("Found %s on port %d ---> %s\n", networkAddress, serverPort, BBNetGetDeviceName(udpBuffer[kLocationIDOffset]));
                     }
                 }
-            }
 
-            free(udpBuffer);
+                free(udpBuffer);
+            }
 
             status = UDPCloseSocket(socketFileDescriptor);
             if (status < 0)
