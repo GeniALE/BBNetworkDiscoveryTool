@@ -72,7 +72,8 @@ static void PrintHelp(char* inArg0)
            "\t%s [option]\n"
            "Options:\n"
            "\t-ver\t\tGet version info.\n"
-           "\t-vcs\t\tGet VCS info.\n", inArg0);
+           "\t-vcs\t\tGet VCS info.\n"
+           "\t-t\t\tNumber of discovery scan iterations.\n", inArg0);
 }
 
 // --------------------------------------------------------------------------------------------------------------
