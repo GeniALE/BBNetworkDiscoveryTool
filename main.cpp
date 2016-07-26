@@ -53,14 +53,6 @@ typedef enum
 // --------------------------------------------------------------------------------------------------------------
 // Private variables.
 
-typedef struct
-{
-    int locationID;
-    const char* name;
-} LocationIDTable_t;
-
-LocationIDTable_t gLocationIDTable[kLocationID_Max] = kLocationIDTable;
-
 int gDiscoveryList[kMaxHosts];
 
 // --------------------------------------------------------------------------------------------------------------
@@ -114,13 +106,15 @@ static bool BBNetAddDeviceToList(int inDeviceID)
 // --------------------------------------------------------------------------------------------------------------
 static const char* BBNetGetDeviceName(int inLocationID)
 {
-    const char* outLocationIDName = gLocationIDTable[kLocationID_Unknown].name;
+    LocationIDTable_t locationIDTable[kLocationID_Max] = kLocationIDTable;
+
+    const char* outLocationIDName = locationIDTable[kLocationID_Unknown].name;
 
     for (uint8_t locationIdx = 0; locationIdx != kLocationID_Max; locationIdx ++)
     {
-        if (gLocationIDTable[locationIdx].locationID == inLocationID)
+        if (locationIDTable[locationIdx].locationID == inLocationID)
         {
-            outLocationIDName = gLocationIDTable[locationIdx].name;
+            outLocationIDName = locationIDTable[locationIdx].name;
             break;
         }
     }
