@@ -187,6 +187,8 @@ int main(int argc, char** argv)
                 free(udpBuffer);
             }
 
+            printf("Discovery terminated.\n");
+
             status = UDPCloseSocket(socketFileDescriptor);
             if (status < 0)
             {
