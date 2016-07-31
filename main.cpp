@@ -10,6 +10,7 @@
 
 // Standard includes.
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include <cstdlib>
 #include <errno.h>
@@ -19,6 +20,8 @@
 #include "UDPClient.h"
 
 // Common includes.
+#include "Host.h"
+#include "BBPacket.h"
 #include "error.h"
 #include "version.h"
 #include "utils.h"
@@ -34,26 +37,16 @@ using namespace std;
 // Subnet.
 #define kSubnet "192.168.2."
 
-typedef enum
-{
-    kLocationID_Unknown,
-    kLocationID_CAC = 0xB0,
-    kLocationID_BB,
-} UDPLocationID_t;
+// Max hosts to discover.
+#define kNetworkDevicesMaxHosts 5
 
-#define kLocationID_Max 3
-
-#define kLocationIDTable \
-{ \
-    {kLocationID_Unknown, "Unknown device"}, \
-    {kLocationID_CAC,     "CAC-Server"}, \
-    {kLocationID_BB,      "BeagleBrew"}, \
-}
+// BeagleBrew UDP traffic port.
+#define kUDPPortBB 34923
 
 // --------------------------------------------------------------------------------------------------------------
 // Private variables.
 
-int gDiscoveryList[kMaxHosts];
+int gDiscoveryList[kNetworkDevicesMaxHosts];
 
 // --------------------------------------------------------------------------------------------------------------
 static void PrintHelp(char* inArg0)
@@ -71,7 +64,7 @@ static bool BBNetCheckDiscoveryList(int inLocationID)
 {
     bool isNotInList = true;
 
-    for (uint8_t deviceIdx = 0; deviceIdx < kMaxHosts; deviceIdx ++)
+    for (uint8_t deviceIdx = 0; deviceIdx < kNetworkDevicesMaxHosts; deviceIdx ++)
     {
         if (gDiscoveryList[deviceIdx] == inLocationID)
         {
@@ -162,7 +155,7 @@ int main(int argc, char** argv)
             {
                 uint8_t* udpBuffer = (uint8_t*)calloc(1, kUDPBufferSize);
                 int serverPort;
-                char networkAddress[kServerAddressSize] = { 0 };
+                char networkAddress[kHostAddressSize] = { 0 };
 
                 if ((status = UDPGetServerInfo(socketFileDescriptor, &serverPort, networkAddress, udpBuffer)) < 0)
                 {
