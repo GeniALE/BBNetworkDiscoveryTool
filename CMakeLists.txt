@@ -22,6 +22,7 @@ set (CMAKE_BUILD_TYPE "Debug")
 # Set project paths.
 set (REPOS_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
 set (COMMON_RELATIVE_PATH ../Commun)
+set (CONTROLLER_RELATIVE_PATH ../BeagleBrew)
 
 # Include compiler options.
 #TODO: -std issues with BLE libs. When lib/CACClient included as lib, can remove.
@@ -30,14 +31,14 @@ include (${REPOS_ROOT}/Commun/CMake/CMakeOptions.cmake)
 # Source file paths relative to source directory.
 set ( BBCONTROLLER_SOURCE_FILES
       main.cpp
-      ${COMMON_RELATIVE_PATH}/lib/CACClient/CACClient.cpp
+      ${CONTROLLER_RELATIVE_PATH}/Firmware/BBControllerDaemon/src/BBConfig.cpp
       ${COMMON_RELATIVE_PATH}/lib/NetworkClient/UDPClient.cpp
-      ${COMMON_RELATIVE_PATH}/lib/NetworkClient/HTTPClient.cpp
       ${COMMON_RELATIVE_PATH}/Code/version.c
       ${COMMON_RELATIVE_PATH}/Code/uString/uString.c
       ${COMMON_RELATIVE_PATH}/Code/bbb/utils.cpp )
 
 include_directories ( .
+                      ${CONTROLLER_RELATIVE_PATH}/Firmware/BBControllerDaemon/include
                       ${COMMON_RELATIVE_PATH}/lib/CACClient
                       ${COMMON_RELATIVE_PATH}/lib/NetworkClient
                       ${COMMON_RELATIVE_PATH}/Code

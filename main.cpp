@@ -15,8 +15,11 @@
 #include <cstdlib>
 #include <errno.h>
 
+// App includes.
+#include "BBConfig.h"
+#include "BBNetworkDiscovery.h"
+
 // Lib includes.
-#include "CACClient.h"
 #include "UDPClient.h"
 
 // Common includes.
@@ -42,6 +45,18 @@ using namespace std;
 
 // BeagleBrew UDP traffic port.
 #define kUDPPortBB 34923
+
+// Config file parsing tables.
+NameID_t gLocationTable[] =  kConfigDeviceMapping_LocationIDTable;
+
+// --------------------------------------------------------------------------------------------------------------
+// Private data types.
+
+typedef struct
+{
+    unsigned int locationID;
+    const char* name;
+} LocationIDTable_t;
 
 // --------------------------------------------------------------------------------------------------------------
 // Private variables.
@@ -97,25 +112,6 @@ static bool BBNetAddDeviceToList(int inDeviceID)
 }
 
 // --------------------------------------------------------------------------------------------------------------
-static const char* BBNetGetDeviceName(int inLocationID)
-{
-    LocationIDTable_t locationIDTable[kLocationID_Max] = kLocationIDTable;
-
-    const char* outLocationIDName = locationIDTable[kLocationID_Unknown].name;
-
-    for (uint8_t locationIdx = 0; locationIdx != kLocationID_Max; locationIdx ++)
-    {
-        if (locationIDTable[locationIdx].locationID == inLocationID)
-        {
-            outLocationIDName = locationIDTable[locationIdx].name;
-            break;
-        }
-    }
-
-    return outLocationIDName;
-}
-
-// --------------------------------------------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
     if (argc < 2)
@@ -167,7 +163,7 @@ int main(int argc, char** argv)
                     char* hostAddress = networkAddress + strlen(kSubnet);
                     if (BBNetAddDeviceToList(atoi(hostAddress)))
                     {
-                        printf("Found %s on port %d ---> %s\n", networkAddress, serverPort, BBNetGetDeviceName(udpBuffer[kLocationIDOffset]));
+                        printf("Found %s on port %d ---> %s\n", networkAddress, serverPort, BBConfigGetName(gLocationTable, udpBuffer[kLocationIDOffset]));
                     }
                 }
 
