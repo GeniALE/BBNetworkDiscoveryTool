@@ -47,7 +47,7 @@ using namespace std;
 #define kUDPPortBB 34923
 
 // Config file parsing tables.
-NameID_t gLocationTable[] =  kConfigDeviceMapping_LocationIDTable;
+static NameID_t gLocationTable[] =  kConfigDeviceMapping_LocationIDTable;
 
 // --------------------------------------------------------------------------------------------------------------
 // Private data types.
@@ -111,6 +111,22 @@ static bool BBNetAddDeviceToList(int inDeviceID)
     return isSuccess;
 }
 
+// ----------------------------------------------------------------------------
+static const char* DeviceLocationGetName(unsigned int inID)
+{
+    NameID_t* inNameIDTable = gLocationTable;
+
+    for (; inNameIDTable->ID != kDeviceLocationID_Unknown; inNameIDTable ++)
+    {
+        if (inNameIDTable->ID == inID)
+        {
+            break;
+        }
+    }
+
+    return inNameIDTable->name;
+}
+
 // --------------------------------------------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
@@ -163,7 +179,7 @@ int main(int argc, char** argv)
                     char* hostAddress = networkAddress + strlen(kSubnet);
                     if (BBNetAddDeviceToList(atoi(hostAddress)))
                     {
-                        printf("Found %s on port %d ---> %s\n", networkAddress, serverPort, BBConfigGetName(gLocationTable, udpBuffer[kLocationIDOffset]));
+                        printf("Found %s on port %d ---> %s\n", networkAddress, serverPort, DeviceLocationGetName(udpBuffer[kLocationIDOffset]));
                     }
                 }
 

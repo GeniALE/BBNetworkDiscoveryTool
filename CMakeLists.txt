@@ -39,6 +39,7 @@ set ( BBCONTROLLER_SOURCE_FILES
 
 include_directories ( .
                       ${CONTROLLER_RELATIVE_PATH}/Firmware/BBControllerDaemon/include
+                      ${CONTROLLER_RELATIVE_PATH}/Commun/Code
                       ${COMMON_RELATIVE_PATH}/lib/CACClient
                       ${COMMON_RELATIVE_PATH}/lib/NetworkClient
                       ${COMMON_RELATIVE_PATH}/Code
