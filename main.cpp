@@ -24,8 +24,6 @@
 
 // Common includes.
 #include "Host.h"
-#include "BBPacket.h"
-#include "error.h"
 #include "version.h"
 #include "utils.h"
 
